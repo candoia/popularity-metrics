@@ -1,0 +1,175 @@
+p: Project = input;
+#WMC        Weighted Method Count
+WMC: output sum[string] of int;
+#DIT           Depth of Inheritance Tree
+DIT: output collection[string] of int;
+#RFC          Response For Class
+#NOC         Number Of Children
+NOC: output sum[string] of int;
+#CBO          Coupling Between Objects
+CBO: output sum[string] of int;
+#LCOM      Lack of Cohesion in Methods
+
+#FanIn         Number of other classes that reference the class
+FanIn: output sum[string] of int;
+#FanOut      Number of other classes referenced by the class
+FanOut: output sum[string] of int;
+#NOA         Number of attributes
+NOA: output sum[string] of int;
+#NOPA       Number of public attributes
+NOPA: output sum[string] of int;
+#NOPRA    Number of private attributes
+NOPRA: output sum[string] of int;
+#NOAI        Number of attributes inherited
+#LOC          Number of lines of code
+LOC: output sum[string] of int;
+#NOM         Number of methods
+NOM: output sum[string] of int;
+#NOPM      Number of public methods
+NOPM: output sum[string] of int;
+#NOPRM    Number of private methods
+NOPRM: output sum[string] of int;
+#NOMI       Number of methods inherited
+
+
+#parents: map[string] of array of string;
+noc: map[string] of int;
+classes: map[string] of int;
+#depth:map[string] of int;
+#depth:= 0;
+#dit:= 0;
+test: output sum of int;
+
+
+#depth:= function(name: string, d: int): int {
+#    dit = 0;
+#    if(haskey(depth, name))
+#        return d + 1;
+#    if(!contains(clas))
+#    
+#    foreach(i: int; node.parents[i]){
+#        dit = max(dit, depth(node.parents[i], d + 1));
+#    }
+#    return dit;
+#};
+#
+#
+#visit(p, visitor {
+#    before node: Declaration -> {
+#       if (node.kind == TypeKind.CLASS || node.kind == TypeKind.INTERFACE){
+#           classes[node.name] = -1;
+#       }
+#   }
+#});
+#
+#visit(p, visitor {
+#    before node: Declaration -> {
+#       if (node.kind == TypeKind.CLASS){
+#           if(len(node.parents)==0)
+#               depth[node.name] = 1; #terminate nodes
+#       }
+#   }
+#});
+
+#visit(p, visitor {
+#    before node: Declaration -> {
+#       if (node.kind == TypeKind.CLASS){
+##          WMC[node.name] << len(node.methods);
+#            if(haskey(depth, node.name))
+#                DIT[node.name] << 1;
+#            else{
+#                dit:=0 ;
+#                foreach(i: int; node.parents[i]){
+#                   dit = max(dit, depth(node.parents[i], 1));
+#               }
+#               DIT[node.name] << dit;
+#            }
+#       }
+#   }
+#});
+
+
+cbo: map[string] of int;
+
+visit(p, visitor {
+    before node: CodeRepository -> {
+        snapshot := getsnapshot(node, "SOURCE_JAVA_JLS"); 
+        foreach (i: int; def(snapshot[i]))
+        visit(snapshot[i]);
+        stop;
+    }
+    
+    before node: Declaration -> {
+        if (node.kind == TypeKind.CLASS){
+#           if(node.name == "PMD"){
+                foreach(i: int; node.parents[i]){
+                    NOC[node.parents[i].name] << 1;
+                }
+                current:= node.name;
+                out: map[string] of int;
+    #            visit(p, visitor{
+    #                before n: Declaration -> {
+    #                    if (n.kind == TypeKind.CLASS){
+    #                        if(n.name != current){
+    #                            visit(n, visitor{
+    #                               before m: Method -> {
+    #                                   if(m.return_type.name == current){
+    #                                        cohesion[n.name] = 1;
+    #                                        stop;
+    #                                   }
+    #                               }
+    #                                before v: Variable -> {
+    #                                   if(v.variable_type.name == current){
+    #                                        cohesion[n.name] = 1;
+    #                                        stop;
+    #                                   }
+    #                               }
+    #                            });
+    #                        }
+    #                    }
+    #                }
+    #            });
+                mRet := "";
+                visit(node, visitor{
+                    before m: Method -> {
+                        mRet = m.return_type.name;
+                        if(mRet!=current){
+                            out[mRet] = 1;
+                        }
+                    }
+                    before v: Variable -> {
+                        if(mRet!=current){
+                            out[v.variable_type.name] = 1;
+                        }
+                   }
+                });
+                mRet = "";
+    #            CBO[node.name] << len(out);
+                NOA[node.name] << len(node.fields);
+                foreach(i: int; node.fields[i]){
+                    if(has_modifier_public(node.fields[i]))
+                        NOPA[node.name] << 1;
+                    if(has_modifier_private(node.fields[i]))
+                        NOPRA[node.name] << 1;
+                }
+                WMC[node.name] << len(node.methods);
+                NOM[node.name] << len(node.methods);
+                foreach (i: int; node.methods[i]){
+                    if(has_modifier_public(node.methods[i]))
+                        NOPM[node.name] << 1;
+                    if(has_modifier_private(node.methods[i]))
+                        NOPRM[node.name] << 1;
+                }
+                ast:= 0;
+                visit(node, visitor{before _ -> ast++;});
+                LOC[node.name] << ast;
+                FanOut[node.name] << len(out);
+#                outs:= keys(out);
+#                foreach(i: int; outs[i]){
+#                        FanIn[outs[i]] << 1;
+#                }
+                stop;
+#           } else stop;
+        }
+    }
+});

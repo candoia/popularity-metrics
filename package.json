@@ -1,0 +1,16 @@
+{
+  "name": "popularity metrics",
+  "productName": "Popularity Metrics",
+  "version": "0.1.0",
+  "author": "Ganesha Upadhyaya <ganeshau@iastate.edu>",
+  "description": "Computes various metrics, such as CK Metrics (NOC WMC), OO Metrics (NOPM, FanOut, LOC) etc",
+  "main": "main.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/candoia/popularity-metrics"
+  },
+  "icon": {
+	"type": "fa",
+	"name": "list"
+  }
+}
