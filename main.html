@@ -2,6 +2,16 @@
   <head>
     <link rel='stylesheet' type='text/css' href='../../env/src/css/font-awesome.min.css'>
     <link rel='stylesheet' type='text/css' href='./app.css'>
+    <style>
+      table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+      }
+      th, td {
+          padding: 5px;
+          text-align: left;
+      }
+    </style>
   </head>
   <body>
     <div class='things'>
@@ -14,6 +24,25 @@
       <!-- <p>
         Number of null check fixing revisions : <span id='output' style="color:blue;font-weight:bold"></span>
       </p> -->
+      <div id='table-output'>
+          <table style="width:85%">
+            <tbody id='table-output-body'>
+              <tr>
+                <th>CLASS</th>
+                <th>FanOut</th>
+                <th>LOC</th>
+                <th>NOA</th>
+                <th>NOC</th>
+                <th>NOM</th>
+                <th>NOPA</th>
+                <th>NOPM</th>
+                <th>NOPRA</th>
+                <th>NOPRM</th>
+                <th>WMC</th>
+              </tr>
+            </tbody>
+          </table>
+      </div>
     </div>
     </div>
     <script src="../../shared/jquery.min.js"></script>
