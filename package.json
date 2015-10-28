@@ -1,5 +1,5 @@
 {
-  "name": "popularity metrics",
+  "name": "popularity-metrics",
   "productName": "Popularity Metrics",
   "version": "0.1.0",
   "author": "Ganesha Upadhyaya <ganeshau@iastate.edu>",
@@ -10,7 +10,7 @@
     "url": "https://github.com/candoia/popularity-metrics"
   },
   "icon": {
-	"type": "fa",
-	"name": "list"
+  	"type": "fa",
+  	"name": "users"
   }
 }
